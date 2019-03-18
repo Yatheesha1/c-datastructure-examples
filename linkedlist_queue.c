@@ -1,38 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
-struct SNode
+struct QNode
 {
     int data;
-    struct SNode *next;
+    struct QNode *next;
 } * head;
 
-struct SNode *newNode(int value)
+struct QNode *newNode(int value)
 {
-    struct SNode *temp = (struct SNode *)malloc(sizeof(struct SNode));
+    struct QNode *temp = (struct QNode *)malloc(sizeof(struct QNode));
     temp->data = value;
     temp->next = NULL;
     return temp;
 }
-struct SNode *push(struct SNode *sNode, int value)
+struct QNode *push(struct QNode *qNode, int value)
 {
-    struct SNode *temp = sNode;
-    if (sNode == NULL)
+    struct QNode *temp = qNode;
+    if (qNode == NULL)
     {
-        temp = newNode(value);
-        sNode = temp;
+        qNode = newNode(value);
+        temp = qNode;
     }
     else
     {
-        while (temp->next)
-        { /* code */
-            temp = temp->next;
-        }
-        temp->next = newNode(value);
+        struct QNode *temp = newNode(value);
+        temp->next = qNode;
+        qNode = temp;
     }
     printf("Pushed to the stack\n");
-    return sNode;
+    return qNode;
 }
-int getNodeLength(struct SNode *node)
+int getNodeLength(struct QNode *node)
 {
     int count = 0;
     while (node)
@@ -44,15 +42,15 @@ int getNodeLength(struct SNode *node)
     return count;
 }
 
-void displayStack(struct SNode *node)
+void displayQueue(struct QNode *node)
 {
     if (node)
     {
-        printf(">>>Stack Length: %d\n", getNodeLength(node));
-        printf(">>>Stack elements: ");
+        printf(">>>Queue Length: %d\n", getNodeLength(node));
+        printf(">>>Queue elements: ");
     }
     else
-        printf(">>>Stack is empty\n");
+        printf(">>>Queue is empty\n");
 
     while (node)
     {
@@ -62,23 +60,23 @@ void displayStack(struct SNode *node)
     }
     printf("\n");
 }
-struct SNode *pop(struct SNode *sNode, int *value)
+struct QNode *pop(struct QNode *qNode, int *value)
 {
-    if (sNode == NULL)
+    if (qNode == NULL)
     {
-        printf("Stack is empty\n");
+        printf("Queue is empty\n");
     }
     else
     {
-        if (!sNode->next)
+        if (!qNode->next)
         {
-            *value = sNode->data;
-            sNode = NULL;
+            *value = qNode->data;
+            qNode = NULL;
         }
         else
         {
-            struct SNode *temp = sNode;
-            struct SNode *prev = sNode;
+            struct QNode *temp = qNode;
+            struct QNode *prev = qNode;
             while (temp->next)
             {
                 prev = temp;
@@ -90,14 +88,14 @@ struct SNode *pop(struct SNode *sNode, int *value)
         }
         printf("%d is popped\n", *value);
     }
-    return sNode;
+    return qNode;
 };
 
 int main()
 {
     char *ch[] = {"Exit", "PUSH", "POP", "Display"};
     int choice, value;
-    printf("\n------------------------------------------\nSTACK OPERATION\n");
+    printf("\n------------------------------------------\nQUEUE OPERATION\n");
     while (1)
     {
         printf("------------------------------------------\n");
@@ -122,7 +120,7 @@ int main()
             break;
 
         case 3:
-            displayStack(head);
+            displayQueue(head);
             break;
 
         case 0:
