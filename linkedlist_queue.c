@@ -4,31 +4,29 @@ struct QNode
 {
     int data;
     struct QNode *next;
-} * head;
+} * front,*rear;
 
-struct QNode *newNode(int value)
+struct QNode *newQNode(int value)
 {
     struct QNode *temp = (struct QNode *)malloc(sizeof(struct QNode));
     temp->data = value;
     temp->next = NULL;
     return temp;
 }
-struct QNode *push(struct QNode *qNode, int value)
+void enQueue(struct QNode **fQNode,struct QNode **rQNode, int value)
 {
-    struct QNode *temp = qNode;
-    if (qNode == NULL)
+    struct QNode *temp = newQNode(value);
+    if ((*rQNode) == NULL)
     {
-        qNode = newNode(value);
-        temp = qNode;
+        (*fQNode) = (*rQNode)=temp;
     }
     else
     {
-        struct QNode *temp = newNode(value);
-        temp->next = qNode;
-        qNode = temp;
+        (*rQNode)->next=temp;
+        (*rQNode) = (*rQNode)->next;
     }
     printf("Pushed to the stack\n");
-    return qNode;
+    // return rQNode;
 }
 int getNodeLength(struct QNode *node)
 {
@@ -48,47 +46,41 @@ void displayQueue(struct QNode *node)
     {
         printf(">>>Queue Length: %d\n", getNodeLength(node));
         printf(">>>Queue elements: ");
-    }
-    else
-        printf(">>>Queue is empty\n");
-
-    while (node)
+        while (node)
     {
         printf("%d ", node->data);
         node = node->next;
         /* code */
     }
+    }
+    else
+        printf(">>>Queue is empty\n");
+
     printf("\n");
 }
-struct QNode *pop(struct QNode *qNode, int *value)
+void deQueue(struct QNode **fQNode,struct QNode **rQNode, int *value)
 {
-    if (qNode == NULL)
+    if ((*rQNode) == NULL)
     {
         printf("Queue is empty\n");
     }
     else
     {
-        if (!qNode->next)
+        if ((*rQNode)==(*fQNode))
         {
-            *value = qNode->data;
-            qNode = NULL;
+            *value = (*rQNode)->data;
+            (*rQNode)=(*fQNode) = NULL;
         }
         else
         {
-            struct QNode *temp = qNode;
-            struct QNode *prev = qNode;
-            while (temp->next)
-            {
-                prev = temp;
-                temp = temp->next;
-            }
-            *value = temp->data;
-            prev->next = NULL;
+            *value = (*fQNode)->data;
+            struct QNode *temp=(*fQNode);
+            (*fQNode)=(*fQNode)->next;
             free(temp);
         }
         printf("%d is popped\n", *value);
     }
-    return qNode;
+    // return fQNode;
 };
 
 int main()
@@ -100,8 +92,8 @@ int main()
     {
         printf("------------------------------------------\n");
         printf("      0    -->    EXIT           \n");
-        printf("      1    -->    PUSH               \n");
-        printf("      2    -->    POP               \n");
+        printf("      1    -->    enQueue               \n");
+        printf("      2    -->    deQueue               \n");
         printf("      3    -->    DISPLAY               \n");
         printf("------------------------------------------\n");
         printf("Enter your choice: ");
@@ -112,15 +104,15 @@ int main()
         case 1:
             printf("Enter your value: ");
             scanf("%d", &value);
-            head = push(head, value);
+            enQueue(&front, &rear, value);
             break;
 
         case 2:
-            head = pop(head, &value);
+            deQueue(&front,&rear, &value);
             break;
 
         case 3:
-            displayQueue(head);
+            displayQueue(front);
             break;
 
         case 0:

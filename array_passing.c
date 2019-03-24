@@ -50,7 +50,8 @@ int main()
                             {3, 4, 5, 6},
                             {6, 7, 8, 9}};
     int arr2[column] = {0, 1, 2, 3};
-    char *c = "Hai", ch[] = "Good";
+    char *c, ch[] = "Good";
+    c = "Hai";
     printf("Before size of array: %d\n", (int)(sizeof(arr) / sizeof(int)));
     display((int *)arr, row, column);
     modify((int *)arr, row, column);

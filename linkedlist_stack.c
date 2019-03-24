@@ -4,7 +4,7 @@ struct SNode
 {
     int data;
     struct SNode *next;
-} * head;
+} * top;
 
 struct SNode *newNode(int value)
 {
@@ -13,24 +13,19 @@ struct SNode *newNode(int value)
     temp->next = NULL;
     return temp;
 }
-struct SNode *push(struct SNode *sNode, int value)
+void push(struct SNode **tSNode, int value)
 {
-    struct SNode *temp = sNode;
-    if (sNode == NULL)
+    struct SNode *temp = newNode(value);
+    if ((*tSNode) == NULL)
     {
-        temp = newNode(value);
-        sNode = temp;
+        (*tSNode) = temp;
     }
     else
     {
-        while (temp->next)
-        { /* code */
-            temp = temp->next;
-        }
-        temp->next = newNode(value);
+        temp->next=(*tSNode);
+        (*tSNode)=temp;
     }
     printf("Pushed to the stack\n");
-    return sNode;
 }
 int getNodeLength(struct SNode *node)
 {
@@ -50,48 +45,32 @@ void displayStack(struct SNode *node)
     {
         printf(">>>Stack Length: %d\n", getNodeLength(node));
         printf(">>>Stack elements: ");
-    }
-    else
-        printf(">>>Stack is empty\n");
-
-    while (node)
+        while (node)
     {
         printf("%d ", node->data);
         node = node->next;
         /* code */
     }
     printf("\n");
+    }
+    else
+        printf(">>>Stack is empty\n");
 }
-struct SNode *pop(struct SNode *sNode, int *value)
+void pop(struct SNode **tSNode, int *value)
 {
-    if (sNode == NULL)
+    if ((*tSNode) == NULL)
     {
         printf("Stack is empty\n");
     }
     else
     {
-        if (!sNode->next)
-        {
-            *value = sNode->data;
-            sNode = NULL;
-        }
-        else
-        {
-            struct SNode *temp = sNode;
-            struct SNode *prev = sNode;
-            while (temp->next)
-            {
-                prev = temp;
-                temp = temp->next;
-            }
+            struct SNode *temp = (*tSNode);
             *value = temp->data;
-            prev->next = NULL;
+            (*tSNode)=(*tSNode)->next;
             free(temp);
-        }
         printf("%d is popped\n", *value);
     }
-    return sNode;
-};
+}
 
 int main()
 {
@@ -114,15 +93,15 @@ int main()
         case 1:
             printf("Enter your value: ");
             scanf("%d", &value);
-            head = push(head, value);
+            push(&top, value);
             break;
 
         case 2:
-            head = pop(head, &value);
+            pop(&top, &value);
             break;
 
         case 3:
-            displayStack(head);
+            displayStack(top);
             break;
 
         case 0:
