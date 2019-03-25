@@ -62,12 +62,13 @@ struct Node *insertNode(struct Node *node, int position, int value)
     else
     {
         temp = node;
+        int pos = position;
         position--;
         while (position--)
         {
             temp = temp->next;
         }
-        if (position == nodelength)
+        if (pos == nodelength)
         {
             temp->next = (struct Node *)malloc(sizeof(struct Node));
             temp = temp->next;
