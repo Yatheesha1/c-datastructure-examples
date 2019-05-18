@@ -4,7 +4,7 @@
 NodeFunctions nodeFuction;
 int main()
 {
-	char *choices[] = {"Exit", "Display", "Insert", "Delete"};
+	const char *choices[] = {"Exit", "Display", "Insert", "Delete"};
 	while (1)
 	{
 		int choice;
@@ -27,10 +27,10 @@ int main()
 			nodeFuction.display(nodeFuction.header);
 			break;
 		case 2:
-			nodeFuction.current = nodeFuction.insert(nodeFuction.current);
+			//nodeFuction.current = nodeFuction.insert(nodeFuction.current);
 			break;
 		case 3:
-			nodeFuction.remove(&nodeFuction.header, &nodeFuction.current);
+			//nodeFuction.remove(&nodeFuction.header, &nodeFuction.current);
 			break;
 		case 4:
 			break;
