@@ -1,25 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
-struct Node
+#include <string.h>
+typedef struct _Node
 {
     int data;
-    struct Node *prev;
-    struct Node *next;
-} * head;
+    struct _Node *prev;
+    struct _Node *next;
+} Node;
 
-struct Node *createNode(int);
-void getNodeDetails(struct Node *);
-int getNodeLength(struct Node *);
-struct Node *insertNode(struct Node *, int, int);
-struct Node *removeNode(struct Node *, int);
+Node * head;
+
+Node *createNode(int);
+void getNodeDetails(Node *);
+int getNodeLength(Node *);
+Node *insertNode(Node *, int, int);
+Node *removeNode(Node *, int);
+Node *removeNodeRec(Node *node);
+Node *removeNodeIndexRec(Node *node, int k);
 
 int main()
 {
-    char *ch[] = {"Exit", "Create", "Insert", "Remove", "Node details"};
+    char *ch[] = {"Exit", "Create", "Insert", "Remove", "Node details", "RemoveNodeRec", "RemoveNodeIndexRec"};
     while (1)
     {
-        int menu, n, index, value;
-        printf("\n==========\nMenus\n==========\n0. Exit\n1. Create\n2. Insert\n3. Remove\n4. Node details\n\nEnter your input: ");
+        int menu, n, index, value, menulen;
+        menulen = sizeof(ch)/sizeof(ch[0]);
+        printf("\n==========\nMenus\n==========\n");
+        for (int i = 0; i < menulen; i++) {
+            printf("%d. %s\n", i, ch[i]);
+        }
+        printf("\nEnter your input: ");
+
         scanf("%d", &menu);
         printf(">>>You selected %s\n", ch[menu]);
         switch (menu)
@@ -52,6 +63,17 @@ int main()
         case 4:
             getNodeDetails(head);
             break;
+        case 5:
+            head = removeNodeRec(head);
+            printf("Nodes are cleared");
+            break;
+
+        case 6:
+            printf("Enter index: ");
+            scanf("%d", &index);
+            head = removeNodeIndexRec(head, index);
+            printf("Nodes are cleared");
+            break;
 
         default:
             printf("Invalid input please try again.\n");
@@ -60,7 +82,7 @@ int main()
     }
     return 0;
 }
-int hasNode(struct Node *node)
+int hasNode(Node *node)
 {
     if (node)
     {
@@ -72,7 +94,7 @@ int hasNode(struct Node *node)
         return 0;
     }
 }
-int getNodeLength(struct Node *node)
+int getNodeLength(Node *node)
 {
     int count = 0;
     while (node)
@@ -82,23 +104,23 @@ int getNodeLength(struct Node *node)
     }
     return count;
 }
-struct Node *createNode(int n)
+Node *createNode(int n)
 {
-    struct Node *node = NULL;
+    Node *node = NULL;
     if (n <= 0)
     {
         printf("Length should be >0");
     }
     else
     {
-        struct Node *temp = (struct Node *)malloc(sizeof(struct Node));
+        Node *temp = (Node *)malloc(sizeof(Node));
         for (int i = 0; i < n; i++)
         {
             int value;
             scanf("%d", &value);
             if (i == 0)
             {
-                node = (struct Node *)malloc(sizeof(struct Node));
+                node = (Node *)malloc(sizeof(Node));
                 node->data = value;
                 node->next = NULL;
                 node->prev = NULL;
@@ -106,7 +128,7 @@ struct Node *createNode(int n)
             }
             else
             {
-                temp->next = (struct Node *)malloc(sizeof(struct Node));
+                temp->next = (Node *)malloc(sizeof(Node));
                 temp->next->prev = temp;
                 temp = temp->next;
                 temp->data = value;
@@ -117,7 +139,7 @@ struct Node *createNode(int n)
     return node;
 }
 
-void getNodeDetails(struct Node *node)
+void getNodeDetails(Node *node)
 {
     if (node)
     {
@@ -135,7 +157,7 @@ void getNodeDetails(struct Node *node)
         printf(">>>Node is empty");
     }
 }
-struct Node *insertNode(struct Node *node, int position, int value)
+Node *insertNode(Node *node, int position, int value)
 {
     int nodelength = getNodeLength(node);
     if (position < 0 || position > nodelength)
@@ -145,7 +167,7 @@ struct Node *insertNode(struct Node *node, int position, int value)
             printf(" your Node is empty.");
         return node;
     }
-    struct Node *temp = (struct Node *)malloc(sizeof(struct Node));
+    Node *temp = (Node *)malloc(sizeof(Node));
 
     if (position == 0)
     {
@@ -174,7 +196,7 @@ struct Node *insertNode(struct Node *node, int position, int value)
         }
         if (index == nodelength)
         {
-            temp->next = (struct Node *)malloc(sizeof(struct Node));
+            temp->next = (Node *)malloc(sizeof(Node));
             temp->next->prev = temp;
             temp = temp->next;
             temp->data = value;
@@ -182,7 +204,7 @@ struct Node *insertNode(struct Node *node, int position, int value)
         }
         else
         {
-            struct Node *temp2 = (struct Node *)malloc(sizeof(struct Node));
+            Node *temp2 = (Node *)malloc(sizeof(Node));
             temp2->prev = temp;
             temp2->next = temp->next;
             temp2->data = value;
@@ -192,7 +214,7 @@ struct Node *insertNode(struct Node *node, int position, int value)
     printf("Item inserted to node.");
     return node;
 }
-struct Node *removeNode(struct Node *node, int index)
+Node *removeNode(Node *node, int index)
 {
     if (node)
     {
@@ -210,7 +232,7 @@ struct Node *removeNode(struct Node *node, int index)
             }
             else if (index == nodeLength - 1)
             {
-                struct Node *temp = node;
+                Node *temp = node;
                 for (int i = 0; i < index - 1; i++)
                 {
                     temp = temp->next;
@@ -220,13 +242,13 @@ struct Node *removeNode(struct Node *node, int index)
             }
             else
             {
-                struct Node *temp2 = node;
+                Node *temp2 = node;
                 index--;
                 while (index--)
                 {
                     temp2 = temp2->next;
                 }
-                struct Node *temp1 = temp2->next->next;
+                Node *temp1 = temp2->next->next;
                 temp1->prev = temp2;
                 temp2->next = temp1;
             }
@@ -239,3 +261,45 @@ struct Node *removeNode(struct Node *node, int index)
     }
     return node;
 };
+
+Node *removeNodeRec(Node *node)
+{
+    if (node == NULL) {
+        return NULL;
+    }
+
+    node->next = removeNodeRec(node->next);
+    printf("Address: %p, Data: %d\n", node->next, node->data);
+    free(node);
+    node = NULL;
+    return node;
+}
+
+Node *removeNodeIndexRec(Node *node, int k)
+{
+    printf("k: %d: \n", k);
+    if (node == NULL) {
+        printf("Node is out of index\n");
+        return NULL;
+    }
+    if (k == 0) {
+        return node->next;
+    }
+
+    if (k == 1) {
+        Node *temp = node->next;
+        if (temp != NULL) {
+            node->next = temp->next;
+        }
+        printf("Deleting %d: \n", temp->data);
+        free(temp);
+        temp = NULL;
+        return node;
+    }
+
+    node->next = removeNodeIndexRec(node->next, k-1);
+    if (node->next != NULL) {
+        node->next->prev = node;
+    }
+    return node;
+}
