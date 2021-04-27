@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #define NODE_MAX 20
-#define LOOP_AT 7
+#define LOOP_AT 1
 #define PRINT_MAX 30
 
 typedef struct _Node
@@ -77,12 +77,17 @@ Node* detectLoop(Node * node) {
 
 void removeLoop(Node* node) {
     Node* temp = head;
-    while (temp->next != node->next) {
-        temp =temp->next;
-        node = node->next;
+    if(node == head) {
+        lastNode->next = NULL;
+        printf("Loop at %p:%d\n", head, head->data);
+    } else {
+        while (temp->next != node->next) {
+            temp =temp->next;
+            node = node->next;
+        }
+        printf("Loop at %p:%d\n", node->next, node->next->data);
+        node->next = NULL;
     }
-    printf("Loop at %p:%d\n", node->next, node->next->data);
-    node->next = NULL;
 }
 
 int main() {
