@@ -38,7 +38,7 @@ void *odd(void *arg) {
 	pthread_exit(0);
 }
 
-void main() {
+int main() {
 
 	int max_value, i, k;
 	Args arg;
@@ -70,4 +70,5 @@ void main() {
 	pthread_cond_destroy(&cond);
 
 	printf("\n");
+	return 0;
 }
