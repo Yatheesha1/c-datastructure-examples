@@ -1,14 +1,15 @@
 #include <stdio.h>
-int main()
-{
-    size_t n = 1; //unsigned int
-    char *c = (char *)&n;
-    if (*c)
-    {
-        printf("Big endian\n");
-    }
+
+int main() 
+{ 
+    unsigned int i = 1; 
+    char *c = (char*)&i; 
+    if (*c) 
+        printf("Little endian\n"); // most of the compiler having this format
     else
-    {
-        printf("Little endian\n");
-    }
-}
+        printf("Big endian\n");
+
+    printf("addr:%p, value:%d\n", &i, *c);
+    printf("next addr:%p, value:%d\n", &i+1, *(c+1)); 
+    return 0; 
+} 
